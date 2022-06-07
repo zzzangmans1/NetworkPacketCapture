@@ -11,3 +11,7 @@ Packet Capture Interface
 ![image](https://user-images.githubusercontent.com/52357235/172307302-bae4032a-d1ae-4045-87a5-0542c67a34a7.png)
 
 Packet capture is in progress
+
+![image](https://user-images.githubusercontent.com/52357235/172399053-b7f62493-c56f-4d88-9502-1cece53d1b8c.png)
+
+Added filtering function
