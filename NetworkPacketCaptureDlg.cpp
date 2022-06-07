@@ -121,6 +121,7 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	click_index = ChoiceNet.DoModal();
 
 	ShowWindow(SW_SHOWMAXIMIZED);														// *** 윈도우 켜질 때 항상 최대화로 켜지게
+
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
 	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
@@ -4387,21 +4388,7 @@ BOOL CNetworkPacketCaptureDlg::PreTranslateMessage(MSG* pMsg)
 		return TRUE;
 	else if (pMsg->wParam == VK_ESCAPE)
 	{
-		// *** YES 버튼을 눌렀다면
-		if (MessageBox("프로그램을 종료하시겠습니까?", "EXIT", MB_YESNO) == IDYES)
-		{
-			DeleteFile("C:\\Users\\lenovo\\Desktop\\test.txt");						// *** 파일 삭제
-			TerminateProcess(ProcessInfo.hProcess, 0);								// *** 서버 생성한 프로세스 종료
-			DWORD dwResult;
-			::GetExitCodeThread(m_PCThread, &dwResult);
-			PostQuitMessage(0);
-		}
-		// *** NO 버튼을 눌렀다면
-		else
-		{
-
-		}
-
+		return TRUE;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }

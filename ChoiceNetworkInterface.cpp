@@ -47,7 +47,6 @@ BOOL ChoiceNetworkInterface::OnInitDialog()
 	m_Netwrok_Interface.InsertColumn(1, _T("Name"), LVCFMT_LEFT, 300);
 	m_Netwrok_Interface.InsertColumn(2, _T("Description"), LVCFMT_LEFT, rect.Width() - 350);
 
-
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
@@ -165,7 +164,6 @@ BOOL ChoiceNetworkInterface::PreTranslateMessage(MSG* pMsg)
 		{
 		}
 		*/
-		pMsg->wParam = NULL;
 		return TRUE;
 	}
 	return CDialog::PreTranslateMessage(pMsg);
