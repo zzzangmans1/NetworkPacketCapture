@@ -111,9 +111,18 @@ void ChoiceNetworkInterface::OnNMDblclkNetwrokinterface(NMHDR* pNMHDR, LRESULT* 
 {
 	NM_LISTVIEW* pNMView = (NM_LISTVIEW*)pNMHDR;
 	click_index = pNMView->iItem;
+
+	size_t res;
+	CString str;
+
 	if (click_index != FAIL)															// *** 클릭한 곳에 값이 있다면
 	{
-		EndDialog(click_index);															// *** 부모 클래스에게 클릭한 인덱스 넘겨주기
+		str.Format("%d", click_index+1);
+		res = MessageBox(str + "번 인터페이스를 선택 하시겠습니까?", "선택", MB_YESNO);
+		if (res == IDYES)
+		{
+			EndDialog(click_index);														// *** 부모 클래스에게 클릭한 인덱스 넘겨주기
+		}			
 	}
 }
 
