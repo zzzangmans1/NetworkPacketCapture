@@ -27,7 +27,7 @@ public:
 	pcap_if_t* alldevs =NULL;														// *** 네트워크 디바이스 조회 변수 선언
 	pcap_if_t* choice_dev;														// *** 네트워크 디바이스 선택 변수 선언
 	char errbuf[PCAP_ERRBUF_SIZE];												// *** 네트워크 에러 변수 선언
-	CListCtrl m_Netwrok_Interface;
+	CListCtrl m_Network_Interface;
 	CBrush m_brush;																// *** 컬러 지정할 브러시 변수 선언
 
 	CRect rect;																	// *** 윈도우 크기 받아올 변수 선언

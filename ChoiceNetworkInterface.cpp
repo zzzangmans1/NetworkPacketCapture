@@ -25,7 +25,7 @@ ChoiceNetworkInterface::~ChoiceNetworkInterface()
 void ChoiceNetworkInterface::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_NETWROKINTERFACE, m_Netwrok_Interface);
+	DDX_Control(pDX, IDC_NETWROKINTERFACE, m_Network_Interface);
 	DDX_Control(pDX, IDC_PROGRESS1, m_Progress);
 }
 
@@ -41,11 +41,11 @@ BOOL ChoiceNetworkInterface::OnInitDialog()
 	m_Progress.SetRange(0, 100);
 	m_brush.CreateSolidBrush(RGB(255, 255, 255));
 	// *** 리스트 컨트롤의 크기를 얻어온다.
-	m_Netwrok_Interface.GetClientRect(&rect);
+	m_Network_Interface.GetClientRect(&rect);
 	// *** 리스트 컨트롤의 칼럼을 추가
-	m_Netwrok_Interface.InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
-	m_Netwrok_Interface.InsertColumn(1, _T("Name"), LVCFMT_LEFT, 300);
-	m_Netwrok_Interface.InsertColumn(2, _T("Description"), LVCFMT_LEFT, rect.Width() - 350);
+	m_Network_Interface.InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
+	m_Network_Interface.InsertColumn(1, _T("Name"), LVCFMT_LEFT, 300);
+	m_Network_Interface.InsertColumn(2, _T("Description"), LVCFMT_LEFT, rect.Width() - 350);
 
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
@@ -74,16 +74,17 @@ BOOL ChoiceNetworkInterface::OnInitDialog()
 	for (choice_dev = alldevs; choice_dev; choice_dev = choice_dev->next)
 	{
 		strcnt.Format(_T("%d"), i + 1);
-		m_Netwrok_Interface.InsertItem(i, strcnt);
-		m_Netwrok_Interface.SetItemText(i, 1, (LPCTSTR)choice_dev->name);
-		m_Netwrok_Interface.SetItemText(i, 2, (LPCTSTR)choice_dev->description);
+		m_Network_Interface.InsertItem(i, strcnt);
+		m_Network_Interface.SetItemText(i, 1, (LPCTSTR)choice_dev->name);
+		m_Network_Interface.SetItemText(i, 2, (LPCTSTR)choice_dev->description);
+		
 		i++;
 	}
 	/* list control 이 클릭하면 행 맨앞 열만 선택이 된다. 그래서 SetExtendedStyle 함수를 사용하여 전체 열을 선택하게 바꿀 것이다.
 	LVS_EX_FULLROWSELECT 만 적용되면 전체 선택되대 열의 선이 보이지 않는다.
 	LVS_EX_GRIDLINES를 적용하면 선택 시 열의 선이 보이게 한다.
 	*/
-	m_Netwrok_Interface.SetExtendedStyle(LVS_EX_FULLROWSELECT);
+	m_Network_Interface.SetExtendedStyle(LVS_EX_FULLROWSELECT);
 	return 0;
 }
 // 툴바 그려주는 함수
@@ -148,6 +149,7 @@ HBRUSH ChoiceNetworkInterface::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 BOOL ChoiceNetworkInterface::PreTranslateMessage(MSG* pMsg)
 {
+	CString i;
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	if (pMsg->message == WM_KEYDOWN)
 	{
