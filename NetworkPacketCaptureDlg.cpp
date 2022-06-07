@@ -4268,10 +4268,12 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 	if(is_FilStart == FALSE)
 	{
 		// *** 필터링 상태 표시줄 표시
+		/*
 		GetDlgItemText(IDC_STATIC, status);
 		status += " [ FILTERING ]";
 		SetDlgItemText(IDC_STATIC, status);
 		m_PCThread->SuspendThread();
+		*/
 		// *** 모든 Item 삭제
 		m_PacketInfoTree.DeleteAllItems();
 		m_NetworkInterfaceControlList.DeleteAllItems();
@@ -4321,10 +4323,12 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 	else if (is_FilStart == TRUE)
 	{
 		// *** 필터링 상태 표시줄 표시
+		/*
 		GetDlgItemText(IDC_STATIC, status);
 		int idx = status.Find(" [ F");
 		status.Delete(idx, 14);
 		SetDlgItemText(IDC_STATIC, status);
+		*/
 		// *** 모든 Item 삭제
 		m_PacketInfoTree.DeleteAllItems();
 		m_NetworkInterfaceControlList.DeleteAllItems();
