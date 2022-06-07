@@ -149,22 +149,17 @@ HBRUSH ChoiceNetworkInterface::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 BOOL ChoiceNetworkInterface::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-	if (pMsg->wParam == VK_RETURN)
-		return TRUE;
-	else if (pMsg->wParam == VK_ESCAPE)
+	if (pMsg->message == WM_KEYDOWN)
 	{
-		/*
-		// *** YES 버튼을 눌렀다면
-		if (MessageBox("프로그램을 종료하시겠습니까?", "EXIT", MB_YESNO) == IDYES)
+		switch (pMsg->wParam)
 		{
-			PostQuitMessage(0);
+		case VK_RETURN:
+			return TRUE;
+		case VK_ESCAPE:
+			return TRUE;
+		default:
+			break;
 		}
-		// *** NO 버튼을 눌렀다면
-		else
-		{
-		}
-		*/
-		return TRUE;
 	}
 	return CDialog::PreTranslateMessage(pMsg);
 }

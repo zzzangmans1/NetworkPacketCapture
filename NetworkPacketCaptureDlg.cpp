@@ -4144,7 +4144,7 @@ void CNetworkPacketCaptureDlg::OnHdnItemclickList1(NMHDR* pNMHDR, LRESULT* pResu
 // *** 메뉴에 소스코드 버튼 누르면
 void CNetworkPacketCaptureDlg::Onsourcebutton()
 {
-	system("explorer https://github.com/zzzangmans1/wonjoo/tree/main/c_lang/MFC");
+	system("explorer https://github.com/zzzangmans1/NetworkPacketCapture");
 }
 
 // *** 메뉴에 로그 버튼을 누르면
@@ -4190,6 +4190,7 @@ void CNetworkPacketCaptureDlg::OnChangeColorButton()
 	// AfxMessageBox("컬러 변경");
 }
 
+// *** Config 파일 읽기
 void CNetworkPacketCaptureDlg::ReadConfig()
 {
 	CStdioFile file;
@@ -4380,15 +4381,26 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 	file.Close();
 }
 
-// *** ESC, ENTER 누르면 꺼지는거 없애는 메시지
+// *** 키 입력 이벤트 
 BOOL CNetworkPacketCaptureDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-	if ( pMsg->wParam == VK_RETURN)
-		return TRUE;
-	else if (pMsg->wParam == VK_ESCAPE)
+	// *** 키입력이 있다면
+	if (pMsg->message == WM_KEYDOWN)
 	{
-		return TRUE;
+		switch (pMsg->wParam)
+		{
+			// *** Enter 누르면 Filter 버튼
+		case VK_RETURN:
+			OnBnClickedFilterButton();
+		case VK_ESCAPE:
+			return TRUE;
+			// *** / 키를 누르면 Edit 에 포커스 
+		case VK_OEM_2:
+			GetDlgItem(IDC_FILTER_EDIT)->SetFocus();
+		default:
+			break;
+		}
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
