@@ -4382,7 +4382,25 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 BOOL CNetworkPacketCaptureDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)
+	if ( pMsg->wParam == VK_RETURN)
 		return TRUE;
+	else if (pMsg->wParam == VK_ESCAPE)
+	{
+		// *** YES 버튼을 눌렀다면
+		if (MessageBox("프로그램을 종료하시겠습니까?", "EXIT", MB_YESNO) == IDYES)
+		{
+			DeleteFile("C:\\Users\\lenovo\\Desktop\\test.txt");						// *** 파일 삭제
+			TerminateProcess(ProcessInfo.hProcess, 0);								// *** 서버 생성한 프로세스 종료
+			DWORD dwResult;
+			::GetExitCodeThread(m_PCThread, &dwResult);
+			PostQuitMessage(0);
+		}
+		// *** NO 버튼을 눌렀다면
+		else
+		{
+
+		}
+
+	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
