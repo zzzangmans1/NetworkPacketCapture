@@ -34,9 +34,7 @@ BEGIN_MESSAGE_MAP(ChangeColor, CDialogEx)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST1, &ChangeColor::OnNMCustomdrawList1)
 END_MESSAGE_MAP()
 
-
 // ChangeColor 메시지 처리기
-
 
 BOOL ChangeColor::OnInitDialog()
 {
