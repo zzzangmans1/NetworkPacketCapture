@@ -129,7 +129,7 @@ public:
 		int flag = -1;  // 클릭한 header에 따라서 정렬할 값이 다르기 때문에 구분해주기위한 변수
 	};
 
-	size_t click_index;																// *** 클릭한 인덱스 
+	size_t click_index = 0;																// *** 클릭한 인덱스 
 	int ClickPacketFrameNumber = 0;
 	int i;
 	int net_dev_idx;

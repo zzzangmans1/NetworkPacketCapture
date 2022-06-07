@@ -145,3 +145,28 @@ HBRUSH ChoiceNetworkInterface::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	// TODO:  기본값이 적당하지 않으면 다른 브러시를 반환합니다.
 	return hbr;
 }
+
+
+BOOL ChoiceNetworkInterface::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	if (pMsg->wParam == VK_RETURN)
+		return TRUE;
+	else if (pMsg->wParam == VK_ESCAPE)
+	{
+		/*
+		// *** YES 버튼을 눌렀다면
+		if (MessageBox("프로그램을 종료하시겠습니까?", "EXIT", MB_YESNO) == IDYES)
+		{
+			PostQuitMessage(0);
+		}
+		// *** NO 버튼을 눌렀다면
+		else
+		{
+		}
+		*/
+		pMsg->wParam = NULL;
+		return TRUE;
+	}
+	return CDialog::PreTranslateMessage(pMsg);
+}

@@ -119,6 +119,7 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 
 	ChoiceNetworkInterface ChoiceNet;													// *** 자식 다이얼로그 
 	click_index = ChoiceNet.DoModal();
+
 	ShowWindow(SW_SHOWMAXIMIZED);														// *** 윈도우 켜질 때 항상 최대화로 켜지게
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
 	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
