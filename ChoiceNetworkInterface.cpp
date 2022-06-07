@@ -77,7 +77,6 @@ BOOL ChoiceNetworkInterface::OnInitDialog()
 		m_Network_Interface.InsertItem(i, strcnt);
 		m_Network_Interface.SetItemText(i, 1, (LPCTSTR)choice_dev->name);
 		m_Network_Interface.SetItemText(i, 2, (LPCTSTR)choice_dev->description);
-		
 		i++;
 	}
 	/* list control 이 클릭하면 행 맨앞 열만 선택이 된다. 그래서 SetExtendedStyle 함수를 사용하여 전체 열을 선택하게 바꿀 것이다.
@@ -94,6 +93,7 @@ BEGIN_MESSAGE_MAP(ChoiceNetworkInterface, CDialog)
 	ON_NOTIFY(NM_DBLCLK, IDC_NETWROKINTERFACE, &ChoiceNetworkInterface::OnNMDblclkNetwrokinterface)
 	ON_NOTIFY(NM_CLICK, IDC_NETWROKINTERFACE, &ChoiceNetworkInterface::OnNMClickNetwrokinterface)
 	ON_WM_CTLCOLOR()
+	ON_NOTIFY(LVN_KEYDOWN, IDC_NETWROKINTERFACE, &ChoiceNetworkInterface::OnLvnKeydownNetwrokinterface)
 END_MESSAGE_MAP()
 
 
@@ -149,13 +149,23 @@ HBRUSH ChoiceNetworkInterface::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 BOOL ChoiceNetworkInterface::PreTranslateMessage(MSG* pMsg)
 {
-	CString i;
+	CString str;
+	size_t res;
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	if (pMsg->message == WM_KEYDOWN)
 	{
 		switch (pMsg->wParam)
 		{
+			// *** Enter 키로 부모 에게 데이터 전달
 		case VK_RETURN:
+			GetDlgItemText(IDC_STATIC, str);
+			AfxExtractSubString(str, str, 4, ' ');
+			res = MessageBox(str+"번 인터페이스를 선택 하시겠습니까?", "선택", MB_YESNO);
+			if (res == IDYES)
+			{
+				str.Format("%d", atoi(str) - 1);
+				EndDialog(atoi(str));
+			}
 			return TRUE;
 		case VK_ESCAPE:
 			return TRUE;
@@ -164,4 +174,35 @@ BOOL ChoiceNetworkInterface::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 	return CDialog::PreTranslateMessage(pMsg);
+}
+
+// *** 키보드 입력 처리 
+void ChoiceNetworkInterface::OnLvnKeydownNetwrokinterface(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMLVKEYDOWN pLVKeyDow = reinterpret_cast<LPNMLVKEYDOWN>(pNMHDR);
+	CString str;
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (pLVKeyDow->wVKey == VK_DOWN)
+	{
+		GetDlgItemText(IDC_STATIC, str);
+		AfxExtractSubString(str, str, 4, ' ');
+		if (m_Network_Interface.GetItemCount() > atoi(str))
+		{
+			str.Format("CHOICE NETWORK INTERFACE : %d", atoi(str) + 1);
+			SetDlgItemText(IDC_STATIC, str);
+		}
+	}
+	if (pLVKeyDow->wVKey == VK_UP)
+	{
+		
+		GetDlgItemText(IDC_STATIC, str);
+		AfxExtractSubString(str, str, 4, ' ');
+		if (atoi(str) > 1)
+		{
+			str.Format("CHOICE NETWORK INTERFACE : %d", atoi(str) - 1);
+			SetDlgItemText(IDC_STATIC, str);
+		}
+	}
+	*pResult = 0;
 }
