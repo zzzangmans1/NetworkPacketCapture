@@ -15,3 +15,7 @@ Packet capture is in progress
 ![image](https://user-images.githubusercontent.com/52357235/172399053-b7f62493-c56f-4d88-9502-1cece53d1b8c.png)
 
 Added filtering function
+
+![image](https://user-images.githubusercontent.com/52357235/172618486-502c1797-99e3-46ea-b310-0f80ca4c937f.png)
+
+Change capture protocol color
