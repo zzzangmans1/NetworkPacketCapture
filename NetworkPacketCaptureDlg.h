@@ -148,7 +148,7 @@ public:
 	CString m_FilterString = "";													// *** 필터 할 문자열
 	int m_Filcnt = 0;
 	BOOL is_FilStart = FALSE;														// *** 필터링 체크 변수
-
+	BOOL is_FIlCheck = FALSE;
 
 	CString tcp, tcpR, tcpG, tcpB,													// *** config 파일 읽어들일 변수
 		udp, udpR, udpG, udpB,

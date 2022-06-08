@@ -694,7 +694,19 @@ void Packet_Handler(u_char* param, const pcap_pkthdr* header, const u_char* data
 		if (pDlg->m_IpHeader->protocol == IPPROTO_UDP) pDlg->SetPacketHexList(SaveData, pDlg->m_Protocol, SWAP16(pDlg->m_UDPHeader->length));
 		else pDlg->SetPacketHexList(SaveData, pDlg->m_Protocol, 0);
 	}
-	
+	if (pDlg->is_FilStart && !pDlg->is_FIlCheck)
+	{
+		for (int m = 0; m <= pDlg->m_NetworkInterfaceControlList.GetItemCount(); m++)
+		{
+			CString ptc;
+			ptc = pDlg->m_NetworkInterfaceControlList.GetItemText(m, 4);
+			if (pDlg->m_FilterString.Compare(ptc) != 0)
+			{
+				pDlg->m_NetworkInterfaceControlList.DeleteItem(m);
+			}
+		}
+		pDlg->is_FIlCheck = TRUE;
+	}
 	pDlg->is_RunThreadOut = TRUE;
 	// *** 스레드를 정지 시켰을 때 애매하게 출력되고 정지되는거 방지
 	if (pDlg->m_eThreadWork == CNetworkPacketCaptureDlg::ThreadWorkingType::THREAD_PAUSE)
@@ -4342,7 +4354,7 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 		//AfxMessageBox("필터링 종료");
 		is_FilStart = FALSE;
 		m_FilterString = "";
-
+		is_FIlCheck = FALSE;
 		while (file.ReadString(ReadStr))
 		{
 			if (ReadStr.Find("START")) {
