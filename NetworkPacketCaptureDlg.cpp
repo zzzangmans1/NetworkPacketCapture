@@ -337,8 +337,6 @@ void CNetworkPacketCaptureDlg::OnLvnItemchangedList1(NMHDR* pNMHDR, LRESULT* pRe
 // *** 쓰레드 동작 함수
 void Packet_Handler(u_char* param, const pcap_pkthdr* header, const u_char* data)
 {
-
-	Sleep(20);
 	CNetworkPacketCaptureDlg* pDlg = (CNetworkPacketCaptureDlg*)AfxGetApp()->m_pMainWnd;
 	CString ListControlCntStr ="";
 	size_t ListControlCnt = 0;
@@ -651,7 +649,10 @@ void Packet_Handler(u_char* param, const pcap_pkthdr* header, const u_char* data
 			}
 			pDlg->m_UDPPacketInfo.Format("Standard query %s 0x%04X %s %s ", pDlg->m_DNSHeader->IsResponse == 0 ? "" : "response", SWAP16(pDlg->m_DNSHeader->Xid), data[infocnt + 2] == 1 ? "A " : " ", infoStr);
 		}
-
+		if (ntohs(pDlg->m_UDPHeader->sport) == 5353 || ntohs(pDlg->m_UDPHeader->dport) == 5353)
+		{
+			pDlg->m_Protocol = "MDNS";
+		}
 		if (ntohs(pDlg->m_UDPHeader->dport) == 1900 && pDlg->m_DestinationIp == "239.255.255.250") {
 			pDlg->m_Protocol = "SSDP";
 			int i = 42;
@@ -694,19 +695,7 @@ void Packet_Handler(u_char* param, const pcap_pkthdr* header, const u_char* data
 		if (pDlg->m_IpHeader->protocol == IPPROTO_UDP) pDlg->SetPacketHexList(SaveData, pDlg->m_Protocol, SWAP16(pDlg->m_UDPHeader->length));
 		else pDlg->SetPacketHexList(SaveData, pDlg->m_Protocol, 0);
 	}
-	if (pDlg->is_FilStart && !pDlg->is_FIlCheck)
-	{
-		for (int m = 0; m <= pDlg->m_NetworkInterfaceControlList.GetItemCount(); m++)
-		{
-			CString ptc;
-			ptc = pDlg->m_NetworkInterfaceControlList.GetItemText(m, 4);
-			if (pDlg->m_FilterString.Compare(ptc) != 0)
-			{
-				pDlg->m_NetworkInterfaceControlList.DeleteItem(m);
-			}
-		}
-		pDlg->is_FIlCheck = TRUE;
-	}
+
 	pDlg->is_RunThreadOut = TRUE;
 	// *** 스레드를 정지 시켰을 때 애매하게 출력되고 정지되는거 방지
 	if (pDlg->m_eThreadWork == CNetworkPacketCaptureDlg::ThreadWorkingType::THREAD_PAUSE)
@@ -4318,7 +4307,8 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 				savedata = ReadStr;
 				file.ReadString(ReadStr);
 				END = ReadStr;
-				if (!protocol.Find(Fil_str)) {
+				// *** Find() 함수 찾기 실패 시 -1 성공하면 인덱스
+				if (protocol.Find(Fil_str) != -1) {
 					m_Filcnt = m_NetworkInterfaceControlList.GetItemCount();
 					CString ListControlCntStr;
 					ListControlCntStr.Format("%d", m_Filcnt + 1);
@@ -4333,6 +4323,7 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 				}
 			}
 		}
+		
 	}
 	// *** 필터링 시작중이라면
 	else if (is_FilStart == TRUE)
@@ -4354,7 +4345,6 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 		//AfxMessageBox("필터링 종료");
 		is_FilStart = FALSE;
 		m_FilterString = "";
-		is_FIlCheck = FALSE;
 		while (file.ReadString(ReadStr))
 		{
 			if (ReadStr.Find("START")) {
