@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <sstream>
 #include <afxsock.h>
-#include <TlHelp32.h>			// *** 파일 종료할 때 찾는 라이브러리
+#include <TlHelp32.h>			// *** 파일 종료할 때 찾는 라이브러리s
 
 // 소켓을 사용하기 위해서 라이브러리 참조해야 한다.
 #pragma comment(lib, "ws2_32")
@@ -148,7 +148,9 @@ public:
 
 	CString m_FilterString = "";													// *** 필터 할 문자열
 	int m_Filcnt = 0;
-	BOOL is_FilStart = FALSE;														// *** 필터링 체크 변수
+	BOOL is_FilStart = FALSE;														// *** 필터링 시작 변수
+	BOOL is_FilCheck = FALSE;														// *** 필터링 내용 체크
+	CString Fil_str;
 
 	CString tcp, tcpR, tcpG, tcpB,													// *** config 파일 읽어들일 변수
 		udp, udpR, udpG, udpB,
@@ -168,6 +170,7 @@ public:
 	int SetPacketHexList(CString data, CString protocol, int udpsize);
 	int EnterDataFile(CString time, CString src, CString dst, CString protocol, CString length, CString info, CString savedata);
 	void ReadConfig();
+
 	static int CALLBACK CompareItem(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);		// *** SORT 처리 함수
 	afx_msg void OnTvnSelchangedPacketInfo(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedStart();
