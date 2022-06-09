@@ -714,7 +714,7 @@ void Packet_Handler(u_char* param, const pcap_pkthdr* header, const u_char* data
 			if (pDlg->m_NetworkInterfaceControlList.GetItemText(z, 4).Find(pDlg->m_FilterString) == -1) {
 				chk = pDlg->m_NetworkInterfaceControlList.GetItemText(z, 4);
 				pDlg->m_NetworkInterfaceControlList.DeleteItem(z);
-				AfxMessageBox(chk);
+				//AfxMessageBox(chk);
 			}
 		}
 	}
