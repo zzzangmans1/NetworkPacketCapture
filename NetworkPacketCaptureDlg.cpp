@@ -114,6 +114,17 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 
 	ReadConfig();
 
+
+	// *** IsDebuggerPresent() : 1 = 디버깅 당하는 중, 2 = 디버깅 중 아님
+	if (IsDebuggerPresent())
+	{
+		MessageBox("Debugging!");
+		DeleteFile("C:\\Users\\lenovo\\Desktop\\test.txt");						// *** 파일 삭제
+		TerminateProcess(ProcessInfo.hProcess, 0);								// *** 서버 생성한 프로세스 종료
+		DWORD dwResult;
+		::GetExitCodeThread(m_PCThread, &dwResult);
+		PostQuitMessage(0);
+	}
 	//ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);									// *** 작업 표시줄 가리기
 
 	ChoiceNetworkInterface ChoiceNet;													// *** 자식 다이얼로그 
@@ -1117,6 +1128,11 @@ int CNetworkPacketCaptureDlg::SetPacketInfoTree(CString framecnt, CString time, 
 		DNSTRS5_7_1,
 		DNSTRS5_8_1, DNSTRS5_8_2, DNSTRS5_8_3, DNSTRS5_8_4, DNSTRS5_8_5, DNSTRS5_8_6, DNSTRS5_8_7, DNSTRS5_8_8, DNSTRS5_8_9, DNSTRS5_8_10,
 		DNSTRS5_8_11, DNSTRS5_8_12, DNSTRS5_8_13, DNSTRS5_8_14, DNSTRS5_8_15;
+	CString MDNSTRS5, MDNSTRS5_1, MDNSTRS5_2, MDNSTRS5_3, MDNSTRS5_4, MDNSTRS5_5, MDNSTRS5_6, MDNSTRS5_7, MDNSTRS5_8,
+		MDNSTRS5_2_1, MDNSTRS5_2_2, MDNSTRS5_2_3, MDNSTRS5_2_4, MDNSTRS5_2_5, MDNSTRS5_2_6, MDNSTRS5_2_7, MDNSTRS5_2_8, MDNSTRS5_2_9, MDNSTRS5_2_10,
+		MDNSTRS5_7_1,
+		MDNSTRS5_8_1, MDNSTRS5_8_2, MDNSTRS5_8_3, MDNSTRS5_8_4, MDNSTRS5_8_5, MDNSTRS5_8_6, MDNSTRS5_8_7, MDNSTRS5_8_8, MDNSTRS5_8_9, MDNSTRS5_8_10,
+		MDNSTRS5_8_11, MDNSTRS5_8_12, MDNSTRS5_8_13, MDNSTRS5_8_14, MDNSTRS5_8_15;
 	CString TLSTRS5, TLSTRS5_TMP, TLSTRS5_1, TLSTRS5_2, TLSTRS5_3, TLSTRS5_4,
 		TLSTRS5_5, TLSTRS5_6, TLSTRS5_7, TLSTRS5_8,
 		TLSTRS5_9, TLSTRS5_10, TLSTRS5_11, TLSTRS5_12,
@@ -1832,7 +1848,7 @@ int CNetworkPacketCaptureDlg::SetPacketInfoTree(CString framecnt, CString time, 
 			}
 		}
 		// *** UDP 라면
-		else if (!protocol.Compare("UDP") || !protocol.Compare("SSDP") || !protocol.Compare("DNS"))
+		else if (!protocol.Compare("UDP") || !protocol.Compare("SSDP") || !protocol.Compare("DNS") || !protocol.Compare("MDNS"))
 		{
 			UDPTRS4.Format("User Datagram Protocol, Src Port: %d, Dst Port: %d", CStringToHex(savedata, 68, 4), CStringToHex(savedata, 72, 4));
 			UDPTRS4_1.Format("Source Port: %d", CStringToHex(savedata, 68, 4));
@@ -1924,7 +1940,7 @@ int CNetworkPacketCaptureDlg::SetPacketInfoTree(CString framecnt, CString time, 
 					j += 4;
 				}
 			}
-			else if (!protocol.Compare("DNS"))
+			else if (!protocol.Compare("DNS") )
 			{
 				CString dnstmp, nametmp = "", cnametmp = "";
 				DNSTRS5.Format("Domain Name System (%s)", ((CStringToHex(savedata, 88, 1) >> 3) & 1) > 0 ? "response" : "query");
