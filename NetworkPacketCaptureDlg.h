@@ -13,6 +13,7 @@
 #include <sstream>
 #include <afxsock.h>
 #include <TlHelp32.h>			// *** 파일 종료할 때 찾는 라이브러리s
+#include <io.h>					// *** findfirst 함수를 사용하기 위해 헤더 추가
 
 // 소켓을 사용하기 위해서 라이브러리 참조해야 한다.
 #pragma comment(lib, "ws2_32")
@@ -124,8 +125,8 @@ public:
 	// 구조체에 정보를 담아서 파라메터로 넘기기 위해서 사용
 	struct SORTPARAM
 	{
-		int iSortColumn;
-		bool bSortDirect;
+		int iSortColumn = 0;
+		bool bSortDirect = FALSE;
 		CListCtrl* pList;
 		int flag = -1;  // 클릭한 header에 따라서 정렬할 값이 다르기 때문에 구분해주기위한 변수
 	};
@@ -160,6 +161,8 @@ public:
 		tls, tlsR, tlsG, tlsB,
 		tmp;
 
+	CString m_ServerFileFath;																// *** Server 파일 패스 입력할 
+	CString m_ServerFileName;																	// *** Server 파일 이름
 		// 2. 클릭시 이벤트 추가 및 정렬에 사용할 함수 선언
 	
 	// *** 함수
@@ -169,6 +172,7 @@ public:
 	int SetPacketInfoTree(CString framecnt, CString time, CString protocol, CString lenth, CString savedata);
 	int SetPacketHexList(CString data, CString protocol, int udpsize);
 	int EnterDataFile(CString time, CString src, CString dst, CString protocol, CString length, CString info, CString savedata);
+	void FindServer();
 	void ReadConfig();
 
 	static int CALLBACK CompareItem(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);		// *** SORT 처리 함수

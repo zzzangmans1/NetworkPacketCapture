@@ -126,6 +126,7 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 		PostQuitMessage(0);
 	}
 	//ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);									// *** 작업 표시줄 가리기
+	FindServer();
 
 	ChoiceNetworkInterface ChoiceNet;													// *** 자식 다이얼로그 
 	click_index = ChoiceNet.DoModal();
@@ -157,8 +158,9 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	// *** 로그 서버 실행
 	StartupInfo.lpTitle = "Server";			// *** 프로세스 이름
 	StartupInfo.cb = sizeof(STARTUPINFO);
-
-	CreateProcess("C:\\Users\\lenovo\\source\\repos\\SocketServer\\bin\\Debug\\netcoreapp3.1\\SocketServer.exe",
+	
+	//CreateProcess("C:\\Users\\lenovo\\source\\repos\\SocketServer\\bin\\Debug\\netcoreapp3.1\\SocketServer.exe",
+	CreateProcess(m_ServerFileFath,
 		NULL, NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &ProcessInfo);
 	if (!ProcessInfo.hProcess)
 	{
@@ -4431,4 +4433,31 @@ BOOL CNetworkPacketCaptureDlg::PreTranslateMessage(MSG* pMsg)
 		}
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CNetworkPacketCaptureDlg::FindServer()
+{
+	_finddata_t fd;
+
+	long handle;
+
+	//m_ServerFileFath = "C:\\Users\\lenovo\\Desktop\\*.*";
+	m_ServerFileFath = "C:\\Users\\lenovo\\Desktop\\netcoreapp3.1\\*.*";
+	m_ServerFileName = "SocketServer.exe";
+	int result = 1;
+	handle = _findfirst(m_ServerFileFath, &fd);
+
+	if (handle == -1) return;
+	m_ServerFileFath.Replace("*.*", "");
+	while (result != -1) {
+		//printf("파일명 : %s, 크기:%d\n", fd.name, fd.size);
+		result = _findnext(handle, &fd);
+		if (m_ServerFileName.Find(fd.name) != -1)
+		{
+			m_ServerFileFath += fd.name;
+			AfxMessageBox(m_ServerFileFath);
+		}
+		
+	}
+	_findclose(handle);
 }
