@@ -113,13 +113,7 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	ShowWindow(SW_SHOWMINIMIZED);														// *** 윈도우 켜질 때 항상 최대화로 켜지게
 	setlocale(LC_ALL, "Korean");
 	SetWindowText(_T("Packet Capture"));												// *** 윈도우 이름 변경
-	// *** IsDebuggerPresent() : 1 = 디버깅 당하는 중, 2 = 디버깅 중 아님
-	if (IsDebuggerPresent() == 1)
-	{
-		AfxMessageBox("Debugging!");
 
-		::SendMessage(GetSafeHwnd(), WM_CLOSE, NULL, NULL);
-	}
 	// *** Find 파일이 있다면
 	int fc = FindConfig();
 	if (fc == 1)
