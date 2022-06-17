@@ -46,7 +46,7 @@ public:
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 {
-
+	
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
@@ -105,16 +105,7 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// *** IsDebuggerPresent() : 1 = 디버깅 당하는 중, 2 = 디버깅 중 아님
-	if (IsDebuggerPresent())
-	{
-		MessageBox("Debugging!");
-		DeleteFile("C:\\Users\\lenovo\\Desktop\\test.txt");						// *** 파일 삭제
-		TerminateProcess(ProcessInfo.hProcess, 0);								// *** 서버 생성한 프로세스 종료
-		DWORD dwResult;
-		::GetExitCodeThread(m_PCThread, &dwResult);
-		PostQuitMessage(0);
-	}
+	
 
 	InitToolBar();					// *** 툴바 생성 
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
@@ -122,7 +113,13 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	ShowWindow(SW_SHOWMINIMIZED);														// *** 윈도우 켜질 때 항상 최대화로 켜지게
 	setlocale(LC_ALL, "Korean");
 	SetWindowText(_T("Packet Capture"));												// *** 윈도우 이름 변경
+	// *** IsDebuggerPresent() : 1 = 디버깅 당하는 중, 2 = 디버깅 중 아님
+	if (IsDebuggerPresent() == 1)
+	{
+		AfxMessageBox("Debugging!");
 
+		::SendMessage(GetSafeHwnd(), WM_CLOSE, NULL, NULL);
+	}
 	// *** Find 파일이 있다면
 	int fc = FindConfig();
 	if (fc == 1)

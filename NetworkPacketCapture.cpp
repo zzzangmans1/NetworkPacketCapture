@@ -20,11 +20,22 @@ END_MESSAGE_MAP()
 
 
 // CNetworkPacketCaptureApp 생성
-
+// *** MFC 프로그래밍 순서중에 가장 빠른 곳
 CNetworkPacketCaptureApp::CNetworkPacketCaptureApp()
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 	// InitInstance에 모든 중요한 초기화 작업을 배치합니다.
+	// 
+	// *** IsDebuggerPresent() : 1 = 디버깅 당하는 중, 2 = 디버깅 중 아님
+	if (IsDebuggerPresent() == 1)
+	{
+		AfxMessageBox("Debugging!");
+		ExitProcess(0);
+	}
+	else
+	{
+		AfxMessageBox("NO Debugging!");
+	}
 }
 
 
