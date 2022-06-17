@@ -105,16 +105,6 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	InitToolBar();					// *** 툴바 생성 
-	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
-	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
-	ShowWindow(SW_SHOWMINIMIZED);														// *** 윈도우 켜질 때 항상 최대화로 켜지게
-	setlocale(LC_ALL, "Korean");
-	SetWindowText(_T("Packet Capture"));												// *** 윈도우 이름 변경
-
-	ReadConfig();
-
-
 	// *** IsDebuggerPresent() : 1 = 디버깅 당하는 중, 2 = 디버깅 중 아님
 	if (IsDebuggerPresent())
 	{
@@ -125,6 +115,41 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 		::GetExitCodeThread(m_PCThread, &dwResult);
 		PostQuitMessage(0);
 	}
+
+	InitToolBar();					// *** 툴바 생성 
+	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
+	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
+	ShowWindow(SW_SHOWMINIMIZED);														// *** 윈도우 켜질 때 항상 최대화로 켜지게
+	setlocale(LC_ALL, "Korean");
+	SetWindowText(_T("Packet Capture"));												// *** 윈도우 이름 변경
+
+	// *** Find 파일이 있다면
+	int fc = FindConfig();
+	if (fc == 1)
+	{
+		AfxMessageBox("Config 파일이 존재합니다.");
+		ReadConfig();
+	}
+	// *** 없다면
+	else
+	{
+		AfxMessageBox("Config 파일이 존재 하지 않습니다. 디폴트 값이 저장됩니다.");
+		CStdioFile file;
+		if (!file.Open("C:\\Users\\lenovo\\Desktop\\config.txt", CStdioFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate | CFile::shareDenyNone))
+		{
+			AfxMessageBox("Config.txt 파일 오픈 실패!");
+		}
+		file.WriteString("TCP 155 242 255\n");
+		file.WriteString("UDP 131 255 122\n");
+		file.WriteString("SSDP 255 197 78\n");
+		file.WriteString("ARP 251 255 95\n");
+		file.WriteString("DNS 255 98 98\n");
+		file.WriteString("TLS 206 148 255\n");
+		file.Close();
+
+		ReadConfig();
+	}
+
 	//ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);									// *** 작업 표시줄 가리기
 	FindServer();
 
@@ -4435,6 +4460,7 @@ BOOL CNetworkPacketCaptureDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
+// *** 바탕화면에서 Server 파일 찾기
 void CNetworkPacketCaptureDlg::FindServer()
 {
 	_finddata_t fd;
@@ -4455,9 +4481,40 @@ void CNetworkPacketCaptureDlg::FindServer()
 		if (m_ServerFileName.Find(fd.name) != -1)
 		{
 			m_ServerFileFath += fd.name;
-			AfxMessageBox(m_ServerFileFath);
+			//AfxMessageBox(m_ServerFileFath);
 		}
 		
 	}
 	_findclose(handle);
 }
+
+// *** 바탕화면에서 Config.txt 파일 찾기
+int CNetworkPacketCaptureDlg::FindConfig()
+{
+	_finddata_t fd;
+
+	long handle;
+
+	//m_ServerFileFath = "C:\\Users\\lenovo\\Desktop\\*.*";
+	m_ConfigFileFath = "C:\\Users\\lenovo\\Desktop\\*.*";
+	m_ConfigFileName = "config.txt";
+	int result = 1;
+	handle = _findfirst(m_ConfigFileFath, &fd);
+
+	if (handle == -1) return 0;
+	m_ConfigFileFath.Replace("*.*", "");
+
+	while (result != -1) {
+		//printf("파일명 : %s, 크기:%d\n", fd.name, fd.size);
+		result = _findnext(handle, &fd);
+		if (m_ConfigFileName.Find(fd.name) != -1)
+		{
+			m_ConfigFileFath += fd.name;
+			AfxMessageBox(fd.name);
+			return 1;
+		}
+	}
+	_findclose(handle);
+	return 0;
+}
+

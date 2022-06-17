@@ -161,8 +161,11 @@ public:
 		tls, tlsR, tlsG, tlsB,
 		tmp;
 
-	CString m_ServerFileFath;																// *** Server 파일 패스 입력할 
+	CString m_ServerFileFath;																	// *** Server 파일 패스 입력할 
 	CString m_ServerFileName;																	// *** Server 파일 이름
+	CString m_ConfigFileFath;
+	CString m_ConfigFileName;
+
 		// 2. 클릭시 이벤트 추가 및 정렬에 사용할 함수 선언
 	
 	// *** 함수
@@ -172,7 +175,8 @@ public:
 	int SetPacketInfoTree(CString framecnt, CString time, CString protocol, CString lenth, CString savedata);
 	int SetPacketHexList(CString data, CString protocol, int udpsize);
 	int EnterDataFile(CString time, CString src, CString dst, CString protocol, CString length, CString info, CString savedata);
-	void FindServer();
+	int FindConfig();
+	void FindServer();																
 	void ReadConfig();
 
 	static int CALLBACK CompareItem(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);		// *** SORT 처리 함수
