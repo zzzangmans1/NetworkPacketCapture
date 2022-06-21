@@ -7,7 +7,6 @@
 #include "NetworkPacketCaptureDlg.h"
 #include "afxdialogex.h"
 
-
 #define FAIL					-1
 
 #define SWAP16(s)				(((((s) & 0xff) << 8) | (((s) >> 8) & 0xff)))
@@ -105,7 +104,9 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	
+	// *** 현재 디렉토리 위치 저장
+	GetCurrentDirectory(100, currdir);
+	curd = currdir;
 
 	InitToolBar();					// *** 툴바 생성 
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
@@ -114,11 +115,11 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	setlocale(LC_ALL, "Korean");
 	SetWindowText(_T("Packet Capture"));												// *** 윈도우 이름 변경
 
+
 	// *** Find 파일이 있다면
 	int fc = FindConfig();
 	if (fc == 1)
 	{
-		AfxMessageBox("Config 파일이 존재합니다.");
 		ReadConfig();
 	}
 	// *** 없다면
@@ -126,9 +127,10 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	{
 		AfxMessageBox("Config 파일이 존재 하지 않습니다. 디폴트 값이 저장됩니다.");
 		CStdioFile file;
-		if (!file.Open("C:\\Users\\lenovo\\Desktop\\config.txt", CStdioFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate | CFile::shareDenyNone))
+		m_ConfigFileFath += "config.txt";
+		if (!file.Open(m_ConfigFileFath, CStdioFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate | CFile::shareDenyNone))
 		{
-			AfxMessageBox("Config.txt 파일 오픈 실패!");
+			AfxMessageBox("config.txt 파일 오픈 실패!");
 		}
 		file.WriteString("TCP 155 242 255\n");
 		file.WriteString("UDP 131 255 122\n");
@@ -178,6 +180,8 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	//CreateProcess("C:\\Users\\lenovo\\source\\repos\\SocketServer\\bin\\Debug\\netcoreapp3.1\\SocketServer.exe",
 	CreateProcess(m_ServerFileFath,
 		NULL, NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &ProcessInfo);
+	
+
 	if (!ProcessInfo.hProcess)
 	{
 		AfxMessageBox("Socket Server Process Create Failed");
@@ -264,7 +268,7 @@ void CNetworkPacketCaptureDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		// *** YES 버튼을 눌렀다면
 		if (MessageBox("프로그램을 종료하시겠습니까?", "EXIT", MB_YESNO) == IDYES)
 		{
-			DeleteFile("C:\\Users\\lenovo\\Desktop\\test.txt");						// *** 파일 삭제
+			DeleteFile(curd+"\\tmp\\pdata.txt");						// *** 파일 삭제
 			TerminateProcess(ProcessInfo.hProcess, 0);								// *** 서버 생성한 프로세스 종료
 			DWORD dwResult;
 			::GetExitCodeThread(m_PCThread, &dwResult);
@@ -743,7 +747,6 @@ void Packet_Handler(u_char* param, const pcap_pkthdr* header, const u_char* data
 			if (pDlg->m_NetworkInterfaceControlList.GetItemText(z, 4).Find(pDlg->m_FilterString) == -1) {
 				chk = pDlg->m_NetworkInterfaceControlList.GetItemText(z, 4);
 				pDlg->m_NetworkInterfaceControlList.DeleteItem(z);
-				//AfxMessageBox(chk);
 			}
 		}
 	}
@@ -3268,7 +3271,7 @@ int CNetworkPacketCaptureDlg::EnterDataFile(CString time, CString src, CString d
 {
 	CStdioFile file;
 	// *** 이어 쓰기 shareDenyNone 다른 곳에서 파일 사용할 때 사용 가능하게
-	if (!file.Open("C:\\Users\\lenovo\\Desktop\\test.txt", CStdioFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate | CFile::shareDenyNone))
+	if (!file.Open(curd + "\\tmp\\pdata.txt", CStdioFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate | CFile::shareDenyNone))
 	{
 		AfxMessageBox("File Open Fail!");
 	}
@@ -4238,7 +4241,7 @@ void CNetworkPacketCaptureDlg::ReadConfig()
 {
 	CStdioFile file;
 
-	if (!file.Open("C:\\Users\\lenovo\\Desktop\\config.txt", CStdioFile::modeCreate | CFile::modeRead | CFile::modeNoTruncate | CFile::shareDenyNone))
+	if (!file.Open(m_ConfigFileFath, CStdioFile::modeCreate | CFile::modeRead | CFile::modeNoTruncate | CFile::shareDenyNone))
 	{
 		AfxMessageBox("파일 오픈 실패!");
 	}
@@ -4306,7 +4309,7 @@ void CNetworkPacketCaptureDlg::OnBnClickedFilterButton()
 		return;
 	}
 	// *** shareDenyNone 다른 곳에서 파일 사용 가능하게 
-	if (!file.Open("C:\\Users\\lenovo\\Desktop\\test.txt", CFile::modeRead | CFile::shareDenyNone))
+	if (!file.Open(curd+"\\tmp\\pdata.txt", CFile::modeRead | CFile::shareDenyNone))
 	{
 		MessageBox(_T("파일 오픈 실패!"), _T("오류"), MB_ICONWARNING);
 		return;
@@ -4455,11 +4458,10 @@ BOOL CNetworkPacketCaptureDlg::PreTranslateMessage(MSG* pMsg)
 void CNetworkPacketCaptureDlg::FindServer()
 {
 	_finddata_t fd;
-
 	long handle;
 
-	//m_ServerFileFath = "C:\\Users\\lenovo\\Desktop\\*.*";
-	m_ServerFileFath = "C:\\Users\\lenovo\\Desktop\\netcoreapp3.1\\*.*";
+	//m_ServerFileFath = "C:\\Users\\lenovo\\Desktop\\netcoreapp3.1\\*.*";
+	m_ServerFileFath = curd + "\\server\\netcoreapp3.1\\*.*";
 	m_ServerFileName = "SocketServer.exe";
 	int result = 1;
 	handle = _findfirst(m_ServerFileFath, &fd);
@@ -4474,7 +4476,6 @@ void CNetworkPacketCaptureDlg::FindServer()
 			m_ServerFileFath += fd.name;
 			//AfxMessageBox(m_ServerFileFath);
 		}
-		
 	}
 	_findclose(handle);
 }
@@ -4486,8 +4487,8 @@ int CNetworkPacketCaptureDlg::FindConfig()
 
 	long handle;
 
-	//m_ServerFileFath = "C:\\Users\\lenovo\\Desktop\\*.*";
-	m_ConfigFileFath = "C:\\Users\\lenovo\\Desktop\\*.*";
+	//m_ConfigFileFath = "C:\\Users\\lenovo\\Desktop\\*.*";
+	m_ConfigFileFath += curd + "\\cfg\\*.*";
 	m_ConfigFileName = "config.txt";
 	int result = 1;
 	handle = _findfirst(m_ConfigFileFath, &fd);

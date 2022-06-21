@@ -37,4 +37,8 @@ public:
 		dns, dnsR, dnsG, dnsB,
 		tls, tlsR, tlsG, tlsB,
 		tmp;
+
+	// *** 디렉토리 찾을 변수
+	char currdir[100];
+	CString curd;
 };

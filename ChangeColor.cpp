@@ -42,6 +42,9 @@ BOOL ChangeColor::OnInitDialog()
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
 
+	GetCurrentDirectory(100, currdir);
+	curd = currdir;
+	curd += "\\cfg\\config.txt";
 	// *** 칼럼 아이템 초기화
 	m_ListCtrl.DeleteAllItems();
 	m_ListCtrl.DeleteColumn(0);
@@ -447,9 +450,9 @@ void ChangeColor::SaveConfig()
 {
 	CStdioFile file;
 
-	if (!file.Open("C:\\Users\\lenovo\\Desktop\\config.txt", CStdioFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate | CFile::shareDenyNone))
+	if (!file.Open(curd, CStdioFile::modeCreate | CFile::modeWrite | CFile::modeNoTruncate | CFile::shareDenyNone))
 	{
-		AfxMessageBox("파일 오픈 실패!");
+		AfxMessageBox("ChangeColor - SaveConfig - config.txt 파일 오픈 실패!");
 	}
 	tmp = tcp + " " + tcpR + " " + tcpG + " " + tcpB+"\n";
 	file.WriteString(tmp);
@@ -471,9 +474,9 @@ void ChangeColor::ReadConfig()
 {
 	CStdioFile file;
 
-	if (!file.Open("C:\\Users\\lenovo\\Desktop\\config.txt", CStdioFile::modeCreate | CFile::modeRead | CFile::modeNoTruncate | CFile::shareDenyNone))
+	if (!file.Open(curd, CStdioFile::modeCreate | CFile::modeRead | CFile::modeNoTruncate | CFile::shareDenyNone))
 	{
-		AfxMessageBox("파일 오픈 실패!");
+		AfxMessageBox("ChangeColor - ReadConfig - config.txt 파일 오픈 실패!");
 	}
 	file.ReadString(tmp);
 	AfxExtractSubString(tcp, tmp, 0, ' ');

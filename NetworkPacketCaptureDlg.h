@@ -165,6 +165,10 @@ public:
 	CString m_ServerFileName;																	// *** Server 파일 이름
 	CString m_ConfigFileFath;
 	CString m_ConfigFileName;
+		
+	// *** 디렉토리 찾을 변수
+	char currdir[100];
+	CString curd;
 
 		// 2. 클릭시 이벤트 추가 및 정렬에 사용할 함수 선언
 	

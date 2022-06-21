@@ -34,7 +34,6 @@ CNetworkPacketCaptureApp::CNetworkPacketCaptureApp()
 	}
 	else
 	{
-		AfxMessageBox("NO Debugging!");
 	}
 }
 
