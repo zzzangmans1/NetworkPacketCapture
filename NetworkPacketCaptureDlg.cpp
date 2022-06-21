@@ -4502,7 +4502,7 @@ int CNetworkPacketCaptureDlg::FindConfig()
 		if (m_ConfigFileName.Find(fd.name) != -1)
 		{
 			m_ConfigFileFath += fd.name;
-			AfxMessageBox(fd.name);
+			//AfxMessageBox(fd.name);
 			return 1;
 		}
 	}
