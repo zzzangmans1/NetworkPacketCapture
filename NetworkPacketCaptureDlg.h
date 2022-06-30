@@ -65,7 +65,9 @@ public:
 	// *** 메뉴
 	afx_msg void Onsourcebutton();												// *** 메뉴 소스코드 버튼 함수
 	afx_msg void OnLogButton();													// *** 메뉴 로그 버튼 함수
-	afx_msg void OnChangeColorButton();
+	afx_msg void OnDCreateButton();												// *** 드라이버 생성 함수
+	afx_msg void OnDCloseButton();												// *** 드라이버 종료 함수
+	afx_msg void OnChangeColorButton();											// *** 프로토콜 프로토콜 색상 변경 버튼 함수
 
 	// *** 툴바 
 	void InitToolBar();															// *** 툴바 생성 함수 선언
@@ -169,6 +171,9 @@ public:
 	// *** 디렉토리 찾을 변수
 	char currdir[100];
 	CString curd;
+
+	// *** 드라이버 실행 변수
+	HANDLE devicehandle;
 
 		// 2. 클릭시 이벤트 추가 및 정렬에 사용할 함수 선언
 	

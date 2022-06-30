@@ -92,6 +92,8 @@ BEGIN_MESSAGE_MAP(CNetworkPacketCaptureDlg, CDialogEx)
 	ON_COMMAND(ID_TCLEAR_BUTTON, &CNetworkPacketCaptureDlg::OnTbClearClickedWindows)
 	ON_COMMAND(ID_GITHUB_BUTTON, &CNetworkPacketCaptureDlg::Onsourcebutton)
 	ON_COMMAND(ID_LOG_BUTTON, &CNetworkPacketCaptureDlg::OnLogButton)
+	ON_COMMAND(ID_DRIVER_CREATE, &CNetworkPacketCaptureDlg::OnDCreateButton)
+	ON_COMMAND(ID_DRIVER_CLOSE, &CNetworkPacketCaptureDlg::OnDCloseButton)
 	ON_COMMAND(ID_CHANGE_COLOR, &CNetworkPacketCaptureDlg::OnChangeColorButton)
 	ON_NOTIFY(HDN_ITEMCLICK, 0, &CNetworkPacketCaptureDlg::OnHdnItemclickList1)					// ** 리스트 헤더 클릭해 SORT 처리
 	ON_WM_CREATE()
@@ -4225,6 +4227,26 @@ void CNetworkPacketCaptureDlg::OnLogButton()
 		//AfxMessageBox("Log Client Thread Success");
 	}
 	return;
+}
+
+void CNetworkPacketCaptureDlg::OnDCreateButton()
+{
+	devicehandle = CreateFile("\\\\.\\mydevicelink123", GENERIC_ALL,0,0,OPEN_EXISTING,FILE_ATTRIBUTE_SYSTEM,0);
+
+	if (devicehandle == INVALID_HANDLE_VALUE)
+	{
+		AfxMessageBox("not valid value");
+		return;
+	}
+	AfxMessageBox("valid value");
+}
+
+void CNetworkPacketCaptureDlg::OnDCloseButton()
+{
+	if (devicehandle != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(devicehandle);
+	}
 }
 
 // *** 메뉴에 컬러 변경 버튼을 누르면
