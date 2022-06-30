@@ -44,13 +44,17 @@
 #define ID_32785                        32785
 #define ID_DRIVER_CREATE                32786
 #define ID_DRIVER_CLOSE                 32787
+#define ID_32788                        32788
+#define ID_32789                        32789
+#define ID_SEND_DATA                    32790
+#define ID_RECV_DATA                    32791
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        148
-#define _APS_NEXT_COMMAND_VALUE         32788
+#define _APS_NEXT_COMMAND_VALUE         32792
 #define _APS_NEXT_CONTROL_VALUE         1028
 #define _APS_NEXT_SYMED_VALUE           105
 #endif

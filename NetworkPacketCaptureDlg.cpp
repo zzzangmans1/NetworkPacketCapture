@@ -94,6 +94,8 @@ BEGIN_MESSAGE_MAP(CNetworkPacketCaptureDlg, CDialogEx)
 	ON_COMMAND(ID_LOG_BUTTON, &CNetworkPacketCaptureDlg::OnLogButton)
 	ON_COMMAND(ID_DRIVER_CREATE, &CNetworkPacketCaptureDlg::OnDCreateButton)
 	ON_COMMAND(ID_DRIVER_CLOSE, &CNetworkPacketCaptureDlg::OnDCloseButton)
+	ON_COMMAND(ID_SEND_DATA, &CNetworkPacketCaptureDlg::OnDSendButton)
+	ON_COMMAND(ID_RECV_DATA, &CNetworkPacketCaptureDlg::OnDRecvButton)
 	ON_COMMAND(ID_CHANGE_COLOR, &CNetworkPacketCaptureDlg::OnChangeColorButton)
 	ON_NOTIFY(HDN_ITEMCLICK, 0, &CNetworkPacketCaptureDlg::OnHdnItemclickList1)					// ** 리스트 헤더 클릭해 SORT 처리
 	ON_WM_CREATE()
@@ -4232,7 +4234,7 @@ void CNetworkPacketCaptureDlg::OnLogButton()
 void CNetworkPacketCaptureDlg::OnDCreateButton()
 {
 	devicehandle = CreateFile("\\\\.\\mydevicelink123", GENERIC_ALL,0,0,OPEN_EXISTING,FILE_ATTRIBUTE_SYSTEM,0);
-
+	
 	if (devicehandle == INVALID_HANDLE_VALUE)
 	{
 		AfxMessageBox("not valid value");
@@ -4246,6 +4248,47 @@ void CNetworkPacketCaptureDlg::OnDCloseButton()
 	if (devicehandle != INVALID_HANDLE_VALUE)
 	{
 		CloseHandle(devicehandle);
+	}
+}
+
+// *** 드라이버에게 데이터 SEND
+void CNetworkPacketCaptureDlg::OnDSendButton()
+{
+	WCHAR* message = L"send sample from mfc";
+	ULONG returnLength = 0;
+
+	char wr[4] = { 0, };
+
+	if (devicehandle != INVALID_HANDLE_VALUE && devicehandle != NULL)
+	{
+		if (!DeviceIoControl(devicehandle, DEVICE_SEND, message, (wcslen(message) + 1) * 2, NULL, 0, &returnLength, 0))
+		{
+			AfxMessageBox("DeviceIoContorl error");
+		}
+		else
+		{
+			_itoa_s(returnLength, wr, 10);
+			AfxMessageBox(wr);
+		}
+	}
+}
+
+// *** 드라이버에게 데이터 RECV
+void CNetworkPacketCaptureDlg::OnDRecvButton()
+{
+	WCHAR message[1024] = { 0, };
+	ULONG returnLength = 0;
+	if (devicehandle != INVALID_HANDLE_VALUE && devicehandle != NULL)
+	{
+		if (!DeviceIoControl(devicehandle, DEVICE_RECV, NULL, 0, message, 1024, &returnLength, 0))
+		{
+			AfxMessageBox("DeviceIoControl error");
+		}
+		else
+		{
+			AfxMessageBox((CString)message);
+		}
+
 	}
 }
 

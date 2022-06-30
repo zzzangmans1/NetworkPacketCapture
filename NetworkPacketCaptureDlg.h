@@ -15,6 +15,11 @@
 #include <TlHelp32.h>			// *** 파일 종료할 때 찾는 라이브러리s
 #include <io.h>					// *** findfirst 함수를 사용하기 위해 헤더 추가
 
+#include "winioctl.h"			// *** 디바이스 소통에 필요한 라이브러리 정의
+
+#define DEVICE_SEND CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_WRITE_DATA)
+#define DEVICE_RECV CTL_CODE(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_READ_DATA)
+
 // 소켓을 사용하기 위해서 라이브러리 참조해야 한다.
 #pragma comment(lib, "ws2_32")
 // inet_ntoa가 deprecated가 되었는데.. 사용하려면 아래 설정을 해야 한다.
@@ -67,6 +72,8 @@ public:
 	afx_msg void OnLogButton();													// *** 메뉴 로그 버튼 함수
 	afx_msg void OnDCreateButton();												// *** 드라이버 생성 함수
 	afx_msg void OnDCloseButton();												// *** 드라이버 종료 함수
+	afx_msg void OnDSendButton();												// *** 드라이버 데이터 보내기 함수
+	afx_msg void OnDRecvButton();												// *** 드라이버 데이터 받기 함수
 	afx_msg void OnChangeColorButton();											// *** 프로토콜 프로토콜 색상 변경 버튼 함수
 
 	// *** 툴바 
