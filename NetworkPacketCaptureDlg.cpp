@@ -8,14 +8,20 @@
 #include "afxdialogex.h"
 
 #define FAIL					-1
+
 #define SWAP16(s)				(((((s) & 0xff) << 8) | (((s) >> 8) & 0xff)))
 #define FLAGSUM(x, y, z)		(x << 3) | (y << 2) | (z << 1)
+
 #define CStringToHex(x,y,z)		strtol(x.Mid(y, z), NULL, 16)	// *** CString to Hex
 #define IsAlpha(x)				isalpha(x) ? x : '.'
 #define CheckAscii(x)			(x > 0x2C && x < 0x123) ? x : '.'
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -39,7 +45,7 @@ public:
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 {
-
+	
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
@@ -174,11 +180,11 @@ BOOL CNetworkPacketCaptureDlg::OnInitDialog()
 	// *** 로그 서버 실행
 	StartupInfo.lpTitle = "Server";			// *** 프로세스 이름
 	StartupInfo.cb = sizeof(STARTUPINFO);
-
+	
 	//CreateProcess("C:\\Users\\lenovo\\source\\repos\\SocketServer\\bin\\Debug\\netcoreapp3.1\\SocketServer.exe",
 	CreateProcess(m_ServerFileFath,
 		NULL, NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &ProcessInfo);
-
+	
 
 	if (!ProcessInfo.hProcess)
 	{
@@ -4228,7 +4234,7 @@ void CNetworkPacketCaptureDlg::OnLogButton()
 void CNetworkPacketCaptureDlg::OnDCreateButton()
 {
 	devicehandle = CreateFile("\\\\.\\mydevicelink123", GENERIC_ALL,0,0,OPEN_EXISTING,FILE_ATTRIBUTE_SYSTEM,0);
-
+	
 	if (devicehandle == INVALID_HANDLE_VALUE)
 	{
 		AfxMessageBox("not valid value");
