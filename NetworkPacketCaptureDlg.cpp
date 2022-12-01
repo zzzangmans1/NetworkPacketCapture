@@ -62,10 +62,14 @@ int main() {
 	scanf("%s", name);
 	
 	seed = getseed(name);
+	if (seed == 0) {
+		printf("\n%s\n", FAIL);
+		return 0;
+	}
 	if (!filelengcheck(filename)) {
 		return 0;
 	}
-	filedata = (uint8_t*)malloc(sizeof(uint8_t) * 10000);
+	filedata = (uint8_t*)malloc(sizeof(uint8_t) * (((namelength * 8) * 2) + f_calc_count + 1));
 	getrand();
 	calc(name);
 	size_t bs = 0;
@@ -74,7 +78,12 @@ int main() {
 		byteTobit(name[i], 8, (filedata + bs));
 		bs += 8;
 	}
-	filecalc(filename, (namelength * 8) * 2, f_calc_count);
+	if (!filecalc(filename, (namelength * 8), f_calc_count))
+	{
+		printf("\n%s\n", FAIL);
+		free(filedata);
+		return 0;
+	}
 
 	for (size_t i = 0; i < namelength; i++)
 	{
@@ -84,7 +93,7 @@ int main() {
 	}
 	for (size_t i = 0; i < namelength; i++)
 	{
-		printf("com1 : %X | com2 : %X\n", comres1[i], comres2[i]);
+		//printf("com1 : %X | com2 : %X\n", comres1[i], comres2[i]);
 		if (comres1[i] != comres2[i]) {
 			printf("\n%s\n", FAIL);
 			free(filedata);
@@ -131,9 +140,7 @@ uint8_t filelengcheck(uint8_t* fname)
 uint8_t filecalc(uint8_t* fname, size_t index, size_t count)
 {
 	FILE* fp = fopen((char*)fname, "rb");
-	size_t i = 0;
 	if (fp == NULL) {
-		printf("파일 오픈 실패\n");
 		return 0;
 	}
 	//printf("\n");
@@ -160,14 +167,20 @@ uint8_t filecalc(uint8_t* fname, size_t index, size_t count)
 			BYTETODWORD(third, thirdbuf[i], digit);
 		
 		//printf("%X ", third);
+		//printf("index : 0x%02X\n", index);
+		if (third < index) // nand 연산에 사용될 주소가 입력 공간에 사용되면 종료
+		{
+			fclose(fp);
+			return 0;
+		}
 		digit = 0;
 		filedata[third] = ~(filedata[first] & filedata[second]);
 		//printf("\t\tthird(%x) : %X ~& %X %X\n",third, filedata[first], filedata[second], filedata[third]);
-		i++;
 		//printf("\n");
 		RESET(first, second, third);
 	}
-	return 0;
+	fclose(fp);
+	return 1;
 }
 
 // 이름으로 시드값 얻는 함수
@@ -175,9 +188,7 @@ uint32_t getseed(uint8_t* name)
 {
 	namelength = namelengcheck(name);
 	uint32_t retseed = 0;
-	if (namelength >= 2) printf("문자열 길이 : %d 입니다.\n", namelength);
-	else {
-		printf("2 미만입니다.\n");
+	if (namelength < 2) {
 		return 0;
 	}
 	for (size_t i = 0; i < namelength; i++)
